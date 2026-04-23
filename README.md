@@ -6,6 +6,7 @@ I have only tested the config on mobile.
 
 ## YOU NEED tintin++ INSTALLED IN YOUR TERMINAL!
 ### Edit private.tin for your characters
+### Aliases and scripts are saved in macros.tin and spacecombat.tin
 ### Put ```alias LOTJ='cd ~/TinTin-Config/LOTJ && tt++ master.tin'``` (only if config is installed in root) in your .bashrc or .zshrc and run ```LOTJ``` to launch LOTJ.
 
 ## Android Steps
