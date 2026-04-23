@@ -4,7 +4,7 @@ Made for LOTJ but structure is modular enough to work with any MUDS.
 
 I have only tested the config on mobile.
 
-## YOU NEED tintin++ INSTALLED IN YOUR TERMINAL FOR IT TO WORK!
+## YOU NEED tintin++ INSTALLED IN YOUR TERMINAL!
 ### Edit private.tin for your characters
 ### Put ```alias LOTJ='cd ~/TinTin-Config/LOTJ && tt++ master.tin'``` (only if config is installed in root) in your .bashrc or .zshrc and run ```LOTJ``` to launch LOTJ.
 
