@@ -19,6 +19,8 @@ I have only tested the config on mobile.
 
 ``nano ~/.bashrc`` (``nano ~/.zshrc`` if zsh) 
 
-add ``alias LOTJ='cd ~/TinTin-Config/LOTJ && tt++ master.tin'`` at bottom of the line
+add ``alias LOTJ='cd ~/TinTin-Config/LOTJ && tt++ master.tin'`` at bottom of the line, ``CTRL+X, Y, ENTER`` to save it.
 
-``LOTJ`` to run it.
+``LOTJ`` to run.
+
+## Pinch in and Out in the Termux and Get Termux:Styling from F-DROID for further customization, just do a long tap on Terminal for customization options.
