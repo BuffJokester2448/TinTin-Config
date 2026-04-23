@@ -1,0 +1,20 @@
+#nop GRIND
+
+#ALIAS {rancor}
+{
+    say ten
+}
+
+#ALIAS {rankill}
+{
+    kill rancor
+}
+
+
+#nop MISC
+
+#ALIAS {map}
+{
+   #map map
+}
+

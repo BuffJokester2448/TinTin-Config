@@ -1,0 +1,76 @@
+#nop CONFIG ASSUMES YOU HAVE INSTALLED IN ROOT DIRECTORY, EDIT DIRECTORY OTHERWISE
+
+#script {HOME_DIR} {echo -n $HOME}
+#script {MUD_DIR}  {echo -n $HOME/TinTin-Config/LOTJ}
+#script {CORE_DIR} {echo -n $HOME/TinTin-Config/Core}
+
+#format {FILE_ALIAS}   {%s/Core.tin}     {$CORE_DIR[1]}
+#format {FILE_PRIVATE} {%s/private.tin}  {$MUD_DIR[1]}
+#format {MACROS_FILE} {%s/macros.tin} {$MUD_DIR[1]}
+#format {MSGLOG_FILE} {%s/msglog.tin} {$MUD_DIR[1]}
+#format {SPACECOMBAT_FILE} {%s/spacecombat.tin} {$MUD_DIR[1]}
+
+#read $FILE_ALIAS
+#read $FILE_PRIVATE
+#read $MACROS_FILE
+#read $SPACECOMBAT_FILE
+#read $MSGLOG_FILE
+
+#ses LOTJ legendsofthejedi.com 5656
+
+#act {%*nter your character%*} {
+    #send $MUD_USER;
+    #unact {login_name}
+} {5} {login_name}
+
+#act {%*assword%*} {
+    #send $MUD_PASS;
+    #unact {login_pass}
+} {5} {login_pass}
+
+#act {%*LotJ's%*timeline%*} {
+    #send {2025};
+    #unact {login_verify}
+} {5} {login_verify}
+
+#split 0 1 0 0 2
+
+
+
+
+
+
+#CONFIG {BUFFER SIZE} {10000}
+#CONFIG {CHARSET} {UTF-8}
+#CONFIG {COLOR MODE} {TRUE}
+#CONFIG {COLOR PATCH} {OFF}
+#CONFIG {COMMAND COLOR} {\e[0;37m}
+#CONFIG {COMMAND ECHO} {ON}
+#CONFIG {COMPACT} {OFF}
+#CONFIG {HISTORY SIZE} {1000}
+#CONFIG {LOG MODE} {RAW}
+#CONFIG {MOUSE} {OFF}
+#CONFIG {PACKET PATCH} {AUTO OFF}
+#CONFIG {REPEAT CHAR} {!}
+#CONFIG {REPEAT ENTER} {OFF}
+#CONFIG {SCREEN READER} {OFF}
+#CONFIG {SCROLL LOCK} {ON}
+#CONFIG {SPEEDWALK} {OFF}
+#CONFIG {TELNET} {ON}
+#CONFIG {VERBATIM} {OFF}
+#CONFIG {VERBATIM CHAR} {\}
+#CONFIG {VERBOSE} {OFF}
+#CONFIG {WORDWRAP} {ON}
+
+#PATHDIR {d} {u} {32}
+#PATHDIR {e} {w} {2}
+#PATHDIR {n} {s} {1}
+#PATHDIR {ne} {sw} {3}
+#PATHDIR {nw} {se} {9}
+#PATHDIR {s} {n} {4}
+#PATHDIR {se} {nw} {6}
+#PATHDIR {sw} {ne} {12}
+#PATHDIR {u} {d} {16}
+#PATHDIR {w} {e} {8}
+
+

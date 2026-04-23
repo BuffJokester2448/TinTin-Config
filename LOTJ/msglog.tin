@@ -1,0 +1,41 @@
+#nop ==============================
+#nop  LOTJ Message Logger
+#nop  Logs all output to dated file
+#nop  Auto creates directory/file
+#nop ==============================
+
+#nop --- Create log directory ---
+#script {mklogdir} {mkdir -p $HOME/MUD/LOTJ/logs}
+
+#nop --- Build dated filename ---
+#format {LOGDATE}     {%D}
+#format {FILE_MSGLOG} {%s/logs/msg_%s.log} {$MUD_DIR[1]} {$LOGDATE}
+
+#nop --- Open log on load ---
+#log {$FILE_MSGLOG} append
+#showme {<102>[ Message log opened: $FILE_MSGLOG ]}
+
+#nop ==============================
+#nop  Daily Rotation
+#nop  Check every 5 minutes
+#nop ==============================
+#var msglog_date {$LOGDATE}
+
+#event {TIMER 300} {
+    #format {newdate} {%D};
+    #if {$newdate != $msglog_date} {
+        #var msglog_date {$newdate};
+        #log off;
+        #format {FILE_MSGLOG} {%s/logs/msg_%s.log} {$MUD_DIR[1]} {$newdate};
+        #log {$FILE_MSGLOG} append;
+        #showme {<102>[ Message log rotated: $FILE_MSGLOG ]}
+    }
+}
+
+#nop ==============================
+#nop  Stop Logging on Disconnect
+#nop ==============================
+#event {SESSION DISCONNECTED} {
+    #log off;
+    #showme {<102>[ Message log closed ]}
+}

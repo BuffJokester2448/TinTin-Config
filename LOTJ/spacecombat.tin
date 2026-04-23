@@ -1,0 +1,365 @@
+#nop ==============================
+#nop  LOTJ Space Combat Macros
+#nop  Based on official LOTJ fleet
+#nop  combat guide commands
+#nop ==============================
+
+#nop ==============================
+#nop  NAVIGATION
+#nop ==============================
+
+#nop Basic movement
+#alias {co}   {course %1 %2 %3}
+#alias {sp}   {speed %1}
+#alias {spmax}{speed 400}
+#alias {spstop}{speed 0}
+#alias {sp1}  {speed 1}
+#alias {spc} {speed 40}
+#alias {vec}  {vector %1 %2 %3}
+#alias {prox} {proximity}
+#alias {ht}   {hyperspace %1 %2 %3}
+#alias {apon} {autopilot on}
+#alias {apoff}{autopilot off}
+#alias {orbit}{orbit %1}
+#alias {rl} {roll}
+
+#nop ==============================
+#nop  FACING / TURNING
+#nop  FACE turns toward a ship
+#nop  COURSE turns toward coordinates
+#nop ==============================
+
+#nop Face a specific ship
+#alias {fc}    {face %1}
+
+#nop Face current target
+#alias {fct}   {face $current_target}
+
+#nop Course to coordinates
+#alias {co}    {course %1 %2 %3}
+
+#nop Course to named object or planet
+#alias {cop}   {course %1}
+
+#nop ==============================
+#nop  AUTO HYPERSPACE ALIAS
+#nop  Sets speed 1 before jumping
+#nop  for entire battlegroup
+#nop ==============================
+
+#alias {bghyp} {
+    battlegroup nav all speed 1;
+    speed 1;
+    #delay 1 {
+        battlegroup nav all hyperspace;
+        hyperspace;
+        #showme {<103>[ Battlegroup jumping ]}
+    }
+}
+
+#alias {hyp} {
+    speed 1;
+    #delay 1 {
+        hyperspace;
+        #showme {<103>[ Jumping to hyperspace ]}
+    }
+}
+
+#nop ==============================
+#nop  Auto Face on Target
+#nop ==============================
+#var current_target {}
+#var autoface {0}
+
+#nop Toggle auto face on/off
+#alias {afon}  {
+    #var autoface {1};
+    #showme {<102>[ Auto face ON ]}
+}
+#alias {afoff} {
+    #var autoface {0};
+    #showme {<102>[ Auto face OFF ]}
+}
+
+#nop Override target alias to also face
+#alias {tg} {
+    #var current_target {%1};
+    target %1;
+    #if {$autoface == 1} {
+        face %1;
+        #showme {<103>[ Targeting and facing: %1 ]}
+    }
+}
+
+#nop Battlegroup target with auto face
+#alias {bgt} {
+    #var current_target {%1};
+    battlegroup target all %1;
+    target %1;
+    #if {$autoface == 1} {
+        face %1
+    }
+}
+
+#nop ==============================
+#nop  Re-face after position change
+#nop ==============================
+#event {IAC SB MSDP MSDP_VAR SHIPSYSX MSDP_VAL %1 IAC SE} {
+    #var ship_x {%1};
+    #if {$autoface == 1 && $current_target != {}} {
+        face $current_target
+    }
+}
+
+#nop ==============================
+#nop  WEAPONS AND COMBAT
+#nop ==============================
+
+#nop Targeting
+#alias {tg}   {target %1}
+#alias {tgc}  {target clear}
+
+#nop Fire individual weapons
+#alias {fi}   {fire}
+#alias {fl}   {fire laser}
+#alias {fion} {fire ion}
+#alias {fm}   {fire missile}
+#alias {ft}   {fire torpedo}
+#alias {fr}   {fire rocket}
+
+#nop Fire all weapons at once
+#alias {fall} {
+    fire;
+    fire laser;
+    fire ion;
+    fire missile;
+    fire torpedo;
+    fire rocket
+}
+
+#nop Chaff
+#alias {ch}   {chaff}
+
+#nop ==============================
+#nop  SHIELDS
+#nop ==============================
+
+#alias {rc}   {recharge}
+#alias {rcs}  {recharge shields}
+#alias {shld} {shield status}
+
+#nop MSDP shield warning
+#nop Alerts when shields drop low
+#event {IAC SB MSDP MSDP_VAR SHIPSHIELD MSDP_VAL %1 IAC SE} {
+    #var cur_shield {%1};
+    #if {%1 < 20 && $in_space == 1} {
+        #showme {<101>[ WARNING: SHIELDS LOW: %1 ]};
+        #script {shieldwarn} {termux-notification --title "LOTJ" --content "Shields critical"}
+    }
+}
+
+#nop Hull warning
+#event {IAC SB MSDP MSDP_VAR SHIPHULL MSDP_VAL %1 IAC SE} {
+    #var cur_hull {%1};
+    #if {%1 < 20 && $in_space == 1} {
+        #showme {<101>[ WARNING: HULL CRITICAL: %1 ]}
+    }
+}
+
+#nop ==============================
+#nop  RADAR AND SCANNING
+#nop ==============================
+
+#alias {ra}   {radar}
+#alias {scan} {scan}
+#alias {fr}   {fleetradar}
+#alias {nav}  {navstat}
+
+#nop ==============================
+#nop  FLIGHT ABILITIES
+#nop ==============================
+
+#alias {grav} {gravitymines}
+#alias {ecm}  {ecm}
+#alias {tow}  {tow %1}
+#alias {dock} {dock %1}
+#alias {esc}  {escape}
+#alias {epod} {escapepod}
+#alias {ret}  {retreat}
+
+#nop ==============================
+#nop  SQUADRON MANAGEMENT
+#nop ==============================
+
+#nop Squadron status
+#alias {sq}      {squadron}
+#alias {sqstat}  {squadron status}
+
+#nop Launch and recall
+#alias {sqscram} {squadron scramble %1}
+#alias {sqland}  {squadron land %1}
+#alias {sqrec}   {squadron recall %1}
+
+#nop Targeting
+#alias {sqtg}    {squadron target %1 %2}
+#alias {sqtgc}   {squadron target %1 clear}
+
+#nop Movement
+#alias {sqco}    {squadron course %1 %2 %3 %4}
+#alias {sqsp}    {squadron speed %1 %2}
+#alias {sqvec}   {squadron vector %1 %2 %3 %4}
+
+#nop Attack
+#alias {sqfi}    {squadron fire %1}
+#alias {sqfall}  {
+    squadron fire %1;
+    squadron fire %1 laser;
+    squadron fire %1 missile
+}
+
+#nop Recharge squadron shields
+#alias {sqrc}    {squadron recharge %1}
+#alias {sqrcall} {
+    squadron recharge 1;
+    squadron recharge 2;
+    squadron recharge 3
+}
+
+#nop Position
+#alias {sqpos}   {squadron position %1 %2}
+
+#nop ==============================
+#nop  BATTLEGROUP MANAGEMENT
+#nop ==============================
+
+#nop Status
+#alias {bg}      {battlegroup}
+#alias {bgstat}  {battlegroup}
+
+#nop Join and quit
+#alias {bgjoin}  {battlegroup join %1}
+#alias {bgquit}  {battlegroup quit}
+#alias {bgej}    {battlegroup eject %1}
+
+#nop Positioning
+#alias {bgpos}   {battlegroup position %1}
+#alias {bgin}    {battlegroup position 3}
+#alias {bgmid}   {battlegroup position 2}
+#alias {bgout}   {battlegroup position 1}
+
+#nop Autopilot across battlegroup
+#alias {bgaon}   {battlegroup nav all autopilot on;autopilot on}
+#alias {bgaoff}  {battlegroup nav all autopilot off;autopilot off}
+
+#nop Targeting across battlegroup
+#alias {bgt}     {battlegroup target all %1;target %1}
+#alias {bgtc}    {battlegroup target all clear;target clear}
+
+#nop Fire all ships in battlegroup
+#alias {bgf}     {
+    battlegroup nav all fire;fire;
+    battlegroup nav all fire laser;fire laser;
+    battlegroup nav all fire ion;fire ion;
+    battlegroup nav all fire missile;fire missile;
+    battlegroup nav all fire torpedo;fire torpedo;
+    battlegroup nav all fire rocket;fire rocket
+}
+
+#nop Movement
+#alias {bgco}    {battlegroup nav all course %1 %2 %3;course %1 %2 %3}
+#alias {bgsp}    {battlegroup nav all speed %1;speed %1}
+#alias {bgvec}   {battlegroup nav %1 vector %2 %3 %4}
+#alias {bgprox}  {battlegroup nav all proximity;proximity}
+
+#nop Split battlegroup for hyperspace
+#nop Uses max speed of slowest ship
+#nop Replace SLOWSPEED with actual value
+#alias {bgsplit} {
+    battlegroup nav all speed SLOWSPEED;
+    speed SLOWSPEED;
+    battlegroup nav WINGSHIP1 vector 50000 0 0;
+    battlegroup nav WINGSHIP2 vector 0 50000 0;
+    vector 0 0 50000
+}
+
+#nop Jump battlegroup to hyperspace
+#alias {bghyp}   {
+    battlegroup nav all speed 1;
+    speed 1;
+    battlegroup nav all hyperspace;
+    hyperspace
+}
+
+#nop Nav command to single ship in battlegroup
+#alias {bgnav}   {battlegroup nav %1 %2}
+
+#nop Chaff across battlegroup
+#alias {bgch}    {battlegroup nav all chaff;chaff}
+
+#nop Recharge across battlegroup
+#alias {bgrc}    {battlegroup nav all recharge;recharge}
+
+#nop ==============================
+#nop  COMBAT STATUS DISPLAY
+#nop ==============================
+
+#nop Quick status check alias
+#alias {combstat} {
+    #showme {=== COMBAT STATUS ===};
+    #showme {Shield : $cur_shield};
+    #showme {Hull   : $cur_hull};
+    #showme {Speed  : $MSDP_SHIPSPEED};
+    #showme {System : $ship_sys};
+    #showme {Coords : X$ship_x Y$ship_y Z$ship_z};
+    #showme {====================}
+}
+
+#nop ==============================
+#nop  COMBAT MACROS
+#nop  Combined action sequences
+#nop ==============================
+
+#nop Emergency recharge and chaff
+#alias {panic} {
+    recharge;
+    recharge shields;
+    chaff;
+    #showme {<101>[ PANIC: Recharging and chaffing ]}
+}
+
+#nop Full engage with face first
+#alias {engage} {
+    #var current_target {%1};
+    face %1;
+    target %1;
+    fire;
+    fire laser;
+    fire ion;
+    fire missile;
+    squadron target 1 %1;
+    squadron target 2 %1;
+    squadron target 3 %1;
+    squadron fire 1;
+    squadron fire 2;
+    squadron fire 3;
+    #showme {<103>[ Facing and engaging: %1 ]}
+}
+
+#nop Battlegroup full engage
+#alias {bgengage} {
+    battlegroup target all %1;
+    target %1;
+    battlegroup nav all fire;fire;
+    battlegroup nav all fire laser;fire laser;
+    battlegroup nav all fire missile;fire missile;
+    #showme {<103>[ Battlegroup engaging: %1 ]}
+}
+
+#nop Retreat sequence
+#alias {runaway} {
+    speed 500;
+    battlegroup nav all speed 500;
+    chaff;
+    battlegroup nav all chaff;
+    #showme {<101>[ RETREATING ]}
+}
