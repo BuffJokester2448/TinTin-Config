@@ -10,7 +10,7 @@ I have only tested the config on mobile.
 ### Put ```alias LOTJ='cd ~/TinTin-Config/LOTJ && tt++ master.tin'``` (only if config is installed in root) in your .bashrc or .zshrc and run ```LOTJ``` to launch LOTJ.
 
 ## Android Steps
-### Install Termux from F-DROID if you want to play it on mobile.
+### Install [Termux from F-DROID](https://f-droid.org/en/packages/com.termux/) or directly from [Github](https://github.com/termux/termux-app/releases) if you want to play it on mobile.
 
 ``pkg upgrade && pkg update``
 
@@ -24,4 +24,4 @@ add ``alias LOTJ='cd ~/TinTin-Config/LOTJ && tt++ master.tin'`` at bottom of the
 
 ``LOTJ`` to run.
 
-## Pinch in and Out in the Termux and Get Termux:Styling from F-DROID for further customization, just do a long tap on Terminal after installing it.
+## Pinch in and Out in the Termux and Get [Termux:Styling from F-DROID](https://f-droid.org/en/packages/com.termux.styling/) or [Github](https://github.com/termux/termux-styling/releases) for further customization, just do a long tap on Terminal after installing it.
