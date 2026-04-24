@@ -1,36 +1,48 @@
 #nop ==============================
 #nop  LOTJ Message Logger
-#nop  Logs all output to dated file
-#nop  Auto creates directory/file
+#nop  Logs all output with
+#nop  daily rotation
 #nop ==============================
 
 #nop --- Create log directory ---
 #script {mklogdir} {mkdir -p $HOME/MUD/LOTJ/logs}
 
-#nop --- Build dated filename ---
-#format {LOGDATE}     {%D}
-#format {FILE_MSGLOG} {%s/logs/msg_%s.log} {$MUD_DIR[1]} {$LOGDATE}
+#nop --- Get real date from shell ---
+#script {LOGDATE} {date +%Y-%m-%d}
 
-#nop --- Open log on load ---
-#log {$FILE_MSGLOG} append
-#showme {<102>[ Message log opened: $FILE_MSGLOG ]}
+#nop --- Build dated filename ---
+#format {FILE_MSGLOG} {%s/logs/msg_%s.log} {$MUD_DIR[1]} {$LOGDATE[1]}
+
+#nop --- Store current date for rotation check ---
+#var msglog_date {$LOGDATE[1]}
+
+#nop ==============================
+#nop  Open Log AFTER Session
+#nop  Connects so MUD output
+#nop  gets captured
+#nop ==============================
+#event {SESSION CONNECTED} {
+    #log append {$FILE_MSGLOG};
+    #showme {<102>[ Message log opened: $FILE_MSGLOG ]}
+}
+
+#config log_level high
+#config log_mode raw
 
 #nop ==============================
 #nop  Daily Rotation
-#nop  Check every 5 minutes
+#nop  Checks every 5 minutes
 #nop ==============================
-#var msglog_date {$LOGDATE}
-
-#event {TIMER 300} {
-    #format {newdate} {%D};
-    #if {$newdate != $msglog_date} {
-        #var msglog_date {$newdate};
+#ticker {msglog_rotate} {
+    #script {newdate} {date +%Y-%m-%d};
+    #if {$newdate[1] != $msglog_date} {
+        #var msglog_date {$newdate[1]};
         #log off;
-        #format {FILE_MSGLOG} {%s/logs/msg_%s.log} {$MUD_DIR[1]} {$newdate};
-        #log {$FILE_MSGLOG} append;
-        #showme {<102>[ Message log rotated: $FILE_MSGLOG ]}
+        #format {FILE_MSGLOG} {%s/logs/msg_%s.log} {$MUD_DIR[1]} {$newdate[1]};
+        #log append {$FILE_MSGLOG};
+        #showme {<102>[ Log rotated: $FILE_MSGLOG ]}
     }
-}
+} {300}
 
 #nop ==============================
 #nop  Stop Logging on Disconnect

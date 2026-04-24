@@ -145,8 +145,7 @@
 #nop ==============================
 
 #alias {rc}   {recharge}
-#alias {rcs}  {recharge shields}
-#alias {shld} {shield status}
+#alias {shld} {shield}
 
 #nop MSDP shield warning
 #nop Alerts when shields drop low
@@ -171,7 +170,6 @@
 #nop ==============================
 
 #alias {ra}   {radar}
-#alias {scan} {scan}
 #alias {fr}   {fleetradar}
 #alias {nav}  {navstat}
 
@@ -179,54 +177,15 @@
 #nop  FLIGHT ABILITIES
 #nop ==============================
 
-#alias {grav} {gravitymines}
-#alias {ecm}  {ecm}
-#alias {tow}  {tow %1}
 #alias {dock} {dock %1}
-#alias {esc}  {escape}
-#alias {epod} {escapepod}
-#alias {ret}  {retreat}
+#alias {epod} {escape now}
 
 #nop ==============================
 #nop  SQUADRON MANAGEMENT
 #nop ==============================
 
-#nop Squadron status
-#alias {sq}      {squadron}
-#alias {sqstat}  {squadron status}
+#nop WIP
 
-#nop Launch and recall
-#alias {sqscram} {squadron scramble %1}
-#alias {sqland}  {squadron land %1}
-#alias {sqrec}   {squadron recall %1}
-
-#nop Targeting
-#alias {sqtg}    {squadron target %1 %2}
-#alias {sqtgc}   {squadron target %1 clear}
-
-#nop Movement
-#alias {sqco}    {squadron course %1 %2 %3 %4}
-#alias {sqsp}    {squadron speed %1 %2}
-#alias {sqvec}   {squadron vector %1 %2 %3 %4}
-
-#nop Attack
-#alias {sqfi}    {squadron fire %1}
-#alias {sqfall}  {
-    squadron fire %1;
-    squadron fire %1 laser;
-    squadron fire %1 missile
-}
-
-#nop Recharge squadron shields
-#alias {sqrc}    {squadron recharge %1}
-#alias {sqrcall} {
-    squadron recharge 1;
-    squadron recharge 2;
-    squadron recharge 3
-}
-
-#nop Position
-#alias {sqpos}   {squadron position %1 %2}
 
 #nop ==============================
 #nop  BATTLEGROUP MANAGEMENT
@@ -252,8 +211,8 @@
 #alias {bgaoff}  {battlegroup nav all autopilot off;autopilot off}
 
 #nop Targeting across battlegroup
-#alias {bgt}     {battlegroup target all %1;target %1}
-#alias {bgtc}    {battlegroup target all clear;target clear}
+#alias {bgt}      {battlegroup target %1 %2}
+#alias {bgta}     {battlegroup target all %1;target %1}
 
 #nop Fire all ships in battlegroup
 #alias {bgf}     {
