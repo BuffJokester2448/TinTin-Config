@@ -4,6 +4,8 @@ Made for LOTJ but structure is modular enough to work with any MUDS.
 
 I have only tested the config on mobile.
 
+A lot of scripts are still WIP.
+
 ## YOU NEED tintin++ INSTALLED IN YOUR TERMINAL!
 ### Edit private.tin for your characters
 ### Aliases and scripts are saved in macros.tin and spacecombat.tin
@@ -21,6 +23,8 @@ I have only tested the config on mobile.
 ``nano ~/.bashrc`` (``nano ~/.zshrc`` if zsh) 
 
 add ``alias LOTJ='cd ~/TinTin-Config/LOTJ && tt++ master.tin'`` at bottom of the line, ``CTRL+X, Y, ENTER`` to save it.
+
+``source ~/.bashrc`` or ``source ~/.zshrc``
 
 ``LOTJ`` to run.
 
