@@ -23,11 +23,8 @@
 #nop ==============================
 #event {SESSION CONNECTED} {
     #log append {$FILE_MSGLOG};
-    #showme {<102>[ Message log opened: $FILE_MSGLOG ]}
+    #showme {<102>[ Message log opened: $FILE_MSGLOG ]};
 }
-
-#config log_level high
-#config log_mode raw
 
 #nop ==============================
 #nop  Daily Rotation
