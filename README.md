@@ -11,6 +11,14 @@ A lot of scripts are still WIP.
 ### Aliases and scripts are saved in macros.tin and spacecombat.tin
 ### Put ```alias LOTJ='cd ~/TinTin-Config/LOTJ && tt++ master.tin'``` (only if config is installed in root) in your .bashrc or .zshrc and run ```LOTJ``` to launch LOTJ.
 
+## Make sure to have character/account registered. If you don't:
+
+``tt++``
+
+``#ses LOTJ legendsofthejedi.com 5656``
+
+Create your character/account.
+
 ## Android Steps
 ### Install [Termux from F-DROID](https://f-droid.org/en/packages/com.termux/) or directly from [Github](https://github.com/termux/termux-app/releases) if you want to play it on mobile.
 
@@ -25,6 +33,8 @@ A lot of scripts are still WIP.
 add ``alias LOTJ='cd ~/TinTin-Config/LOTJ && tt++ master.tin'`` at bottom of the line, ``CTRL+X, Y, ENTER`` to save it.
 
 ``source ~/.bashrc`` or ``source ~/.zshrc``
+
+``nano TinTin-Config/LOTJ/private.tin`` and fill the lines.
 
 ``LOTJ`` to run.
 
