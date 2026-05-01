@@ -177,7 +177,6 @@
 #nop  FLIGHT ABILITIES
 #nop ==============================
 
-#alias {dock} {dock %1}
 #alias {epod} {escape now}
 
 #nop ==============================
