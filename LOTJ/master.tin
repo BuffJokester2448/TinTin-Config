@@ -18,27 +18,7 @@
 
 #ses LOTJ legendsofthejedi.com 5656
 
-#act {%*nter your character%*} {
-    #send $MUD_USER;
-    #unact {login_name}
-} {5} {login_name}
-
-#act {%*assword%*} {
-    #send $MUD_PASS;
-    #unact {login_pass}
-} {5} {login_pass}
-
-#act {%*LotJ's%*timeline%*} {
-    #send {2025};
-    #unact {login_verify}
-} {5} {login_verify}
-
 #split 0 1 0 0 2
-
-
-
-
-
 
 #CONFIG {BUFFER SIZE} {10000}
 #CONFIG {CHARSET} {UTF-8}

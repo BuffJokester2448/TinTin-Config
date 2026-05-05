@@ -1,2 +1,62 @@
-#var MUD_USER 'YOUR USERNAME'
-#var MUD_PASS 'YOUR PASS'
+#nop ==============================
+#nop  LOTJ Credentials
+#nop  Full login in private.tin
+#nop  Character selection manual
+#nop ==============================
+
+#nop --- Character names ---
+#var CHAR_MAIN {ENTER MAIN CHARACTER NAME HERE}
+#var CHAR_MAIN_PASS {ENTER MAIN CHARACTER PASS}
+
+#var CHAR_ALT1  {ENTER FIRST ALT CHARACTER NAME}
+#var CHAR_ALT1_PASS  {ENTER FIRST ALT CHARACTER PASS}
+
+#nop You can add more characters by copypasting 'CHAR_ALT1' lines and renaming ALT1 to ALT2 and so on.
+
+#nop --- Verification code ---
+#var MUD_VCODE {2025}
+
+#nop ==============================
+#nop  Character Selection Aliases
+#nop ==============================
+
+#var active_pass {}
+
+#nop Rename 1char and 2char to your character names
+
+#alias {1char} {
+    #send $CHAR_MAIN;
+    #var active_pass {$CHAR_MAIN_PASS};
+    #showme {<102>[ Logging in as $CHAR_MAIN ]}
+}
+
+#alias {2char} {
+    #send $CHAR_ALT1;
+    #var active_pass {$CHAR_ALT1_PASS};
+    #showme {<102>[ Logging in as $CHAR_ALT1 ]}
+}
+
+#nop Copy 2char/$CHAR_ALT1's #alias to end '}' and rename $CHAR_ALT1 and $CHAR_ALT_PASS to $CHAR_ALT2 and $CHAR_ALT2_PASS
+
+#nop ==============================
+#nop  Auto Login
+#nop  Fires on character prompt
+#nop  No account - direct login
+#nop ==============================
+
+#nop --- Character name prompt ---
+#act {%*nter your character%*} {
+    #showme {<102>[ Ready - type your character name ]};
+    #unact {login_name}
+} {5} {login_name}
+
+#nop --- Password uses active_pass ---
+#act {%*assword%*} {
+    #send $active_pass;
+    #unact {login_pass}
+} {5} {login_pass}
+
+#act {%*LotJ's%*timeline%*} {
+    #send $MUD_VCODE;
+    #unact {login_verify}
+} {5} {login_verify}
