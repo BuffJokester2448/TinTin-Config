@@ -1,0 +1,59 @@
+#nop ==============================
+#nop  LOTJ GMCP - Map Focus Only
+#nop ==============================
+
+#format {IAC}  {%a} {255}
+#format {DO}   {%a} {253}
+#format {WILL} {%a} {251}
+#format {SB}   {%a} {250}
+#format {SE}   {%a} {240}
+#format {GMCP} {%a} {201}
+
+#nop === Respond to LOTJ GMCP offer ===
+#event {IAC WILL GMCP} {
+    #send {$IAC$DO$GMCP};
+
+    #nop Identify client
+    #send {$IAC$SB$GMCP core.hello {
+        "client": "TinTin++",
+        "version": "1.0"
+    } $IAC$SE};
+
+    #nop Request room module only
+    #send {$IAC$SB$GMCP core.supports.set [
+        "room 1",
+        "room.info 1"
+    ] $IAC$SE};
+
+    #showme {<102>[ GMCP handshake sent to LOTJ ]}
+}
+
+#nop ==============================
+#nop  GMCP Room Sync
+#nop  Primary sync if LOTJ sends it
+#nop  MSDP is fallback
+#nop ==============================
+
+#event {IAC SB GMCP room.info IAC SE} {
+    #json GMCP_ROOM %1;
+
+    #nop Sync position
+    #var cur_vnum {$GMCP_ROOM[num]};
+    #map goto $GMCP_ROOM[num];
+
+    #nop Name the room
+    #map name {$GMCP_ROOM[name]};
+
+    #nop Tag zone/area
+    #if {$GMCP_ROOM[area] != {}} {
+        #map set roomarea {$GMCP_ROOM[area]}
+    };
+
+    #nop Release waitkey if set
+    #if {$map_waiting == 1} {
+        #var map_waiting 0;
+        #map flag waitkey off
+    };
+
+    #showme {<102>[ GMCP room: $GMCP_ROOM[name] ($GMCP_ROOM[num]) ]}
+}

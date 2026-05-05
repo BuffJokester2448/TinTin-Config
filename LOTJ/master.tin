@@ -5,12 +5,14 @@
 #script {CORE_DIR} {echo -n $HOME/TinTin-Config/Core}
 
 #format {FILE_ALIAS}   {%s/Core.tin}     {$CORE_DIR[1]}
+#format {FILE_MSDP}    {%s/msdp.tin}     {MUD_DIR[1]}
 #format {FILE_PRIVATE} {%s/private.tin}  {$MUD_DIR[1]}
 #format {MACROS_FILE} {%s/macros.tin} {$MUD_DIR[1]}
 #format {MSGLOG_FILE} {%s/msglog.tin} {$MUD_DIR[1]}
 #format {SPACECOMBAT_FILE} {%s/spacecombat.tin} {$MUD_DIR[1]}
 
 #read $FILE_ALIAS
+#read $FILE_MSDP
 #read $FILE_PRIVATE
 #read $MACROS_FILE
 #read $SPACECOMBAT_FILE

@@ -183,8 +183,8 @@
 #nop  SQUADRON MANAGEMENT
 #nop ==============================
 
-#nop WIP
-
+#alias sqr {squadron roll}
+#alias sqc {squadron chaff}
 
 #nop ==============================
 #nop  BATTLEGROUP MANAGEMENT
@@ -320,4 +320,282 @@
     chaff;
     battlegroup nav all chaff;
     #showme {<101>[ RETREATING ]}
+}
+
+#NOP SQUADRON TG AND AUTO RELOCK
+
+#nop ==============================
+#nop  LOTJ Modular Smart Targeting
+#nop  Probes from ceiling down
+#nop  Finds highest real fighter
+#nop  Works with 1-10+ fighters
+#nop  Any squad or BG name
+#nop ==============================
+
+#nop ==============================
+#nop  CONFIG - adjust these
+#nop ==============================
+#var SQ_CEIL        {10}
+#var SQ_FLOOR       {1}
+#var SQ_PROBE_DELAY {1}
+
+#nop ==============================
+#nop  STATE VARIABLES
+#nop ==============================
+#var sq_name        {}
+#var sq_num         {0}
+#var sq_max         {0}
+#var last_target    {}
+#var auto_retarget  {1}
+#var tgt_probing    {0}
+#var tgt_probe_num  {0}
+
+#nop ==============================
+#nop  PROBE ENGINE
+#nop  Starts at SQ_CEIL and steps
+#nop  down until server confirms
+#nop  a real fighter exists
+#nop ==============================
+
+#alias {tgs} {
+    #var sq_name       {%*};
+    #var tgt_probing   {1};
+    #var tgt_probe_num {$SQ_CEIL};
+    #showme {<102>[ Probing %* from $SQ_CEIL down ]};
+    sq_probe_step
+}
+
+#alias {sq_probe_step} {
+    #if {$tgt_probe_num >= $SQ_FLOOR} {
+        target $sq_name-$tgt_probe_num;
+        #showme {<102>[ Trying: $sq_name-$tgt_probe_num ]}
+    } {
+        #var tgt_probing {0};
+        #showme {<101>[ No fighters found in $sq_name ]}
+    }
+}
+
+#nop ==============================
+#nop  PROBE RESPONSES
+#nop  Server confirms or denies
+#nop  each probe attempt
+#nop ==============================
+
+#nop Valid target confirmed
+#act {%*now targeting%*} {
+    #if {$tgt_probing == 1} {
+        #var tgt_probing {0};
+        #var sq_num      {$tgt_probe_num};
+        #var sq_max      {$tgt_probe_num};
+        #var last_target {$sq_name-$tgt_probe_num};
+        face $sq_name-$tgt_probe_num;
+        #showme {<103>[ Locked: $sq_name-$tgt_probe_num (max: $sq_max) ]}
+    }
+} {5} {probe_confirmed}
+
+#nop Invalid - step down
+#act {%*target is invalid%*} {
+    #if {$tgt_probing == 1} {
+        #math {tgt_probe_num} {$tgt_probe_num - 1};
+        #delay $SQ_PROBE_DELAY {sq_probe_step}
+    } {
+        #showme {<101>[ Target invalid - cycling down ]};
+        tsd
+    }
+} {5} {probe_invalid}
+
+#act {%*that target is gone%*} {
+    #if {$tgt_probing == 1} {
+        #math {tgt_probe_num} {$tgt_probe_num - 1};
+        #delay $SQ_PROBE_DELAY {sq_probe_step}
+    } {
+        #showme {<101>[ Target gone - cycling down ]};
+        tsd
+    }
+} {5} {probe_gone}
+
+#act {%*no such target%*} {
+    #if {$tgt_probing == 1} {
+        #math {tgt_probe_num} {$tgt_probe_num - 1};
+        #delay $SQ_PROBE_DELAY {sq_probe_step}
+    } {
+        tsd
+    }
+} {5} {probe_noexist}
+
+#nop ==============================
+#nop  CYCLE DOWN
+#nop  tsd - next fighter down
+#nop ==============================
+
+#alias {tsd} {
+    #if {$sq_num > $SQ_FLOOR} {
+        #math {sq_num} {$sq_num - 1};
+        #var last_target {$sq_name-$sq_num};
+        target $sq_name-$sq_num;
+        face $sq_name-$sq_num;
+        #showme {<103>[ Targeting: $sq_name-$sq_num ]}
+    } {
+        #showme {<101>[ No more fighters in $sq_name ]}
+    }
+}
+
+#nop ==============================
+#nop  CYCLE UP
+#nop  tsu - step up one
+#nop ==============================
+
+#alias {tsu} {
+    #if {$sq_num < $sq_max} {
+        #math {sq_num} {$sq_num + 1};
+        #var last_target {$sq_name-$sq_num};
+        target $sq_name-$sq_num;
+        face $sq_name-$sq_num;
+        #showme {<103>[ Targeting: $sq_name-$sq_num ]}
+    } {
+        #showme {<101>[ Already at max: $sq_name-$sq_num ]}
+    }
+}
+
+#nop ==============================
+#nop  DIRECT NUMBER
+#nop  tsn <name> <num>
+#nop ==============================
+
+#alias {tsn} {
+    #var sq_name     {%1};
+    #var sq_num      {%2};
+    #var sq_max      {%2};
+    #var last_target {%1-%2};
+    target %1-%2;
+    face %1-%2;
+    #showme {<103>[ Direct target: %1-%2 ]}
+}
+
+#nop ==============================
+#nop  ADJUST CEILING ON THE FLY
+#nop  Useful when you know size
+#nop  before probing
+#nop ==============================
+
+#alias {sqceil} {
+    #var SQ_CEIL {%1};
+    #showme {<102>[ Probe ceiling set to %1 ]}
+}
+
+#alias {sqfloor} {
+    #var SQ_FLOOR {%1};
+    #showme {<102>[ Probe floor set to %1 ]}
+}
+
+#alias {sqdelay} {
+    #var SQ_PROBE_DELAY {%1};
+    #showme {<102>[ Probe delay set to %1 sec ]}
+}
+
+#nop ==============================
+#nop  RETARGET
+#nop  rt  - retarget last
+#nop  rtf - retarget and face
+#nop ==============================
+
+#alias {rt} {
+    #if {$last_target != {}} {
+        target $last_target;
+        #showme {<103>[ Retargeting: $last_target ]}
+    } {
+        #showme {<101>[ No last target stored ]}
+    }
+}
+
+#alias {rtf} {
+    #if {$last_target != {}} {
+        target $last_target;
+        face $last_target;
+        #showme {<103>[ Retarget + face: $last_target ]}
+    } {
+        #showme {<101>[ No last target stored ]}
+    }
+}
+
+#nop ==============================
+#nop  AUTO RETARGET TOGGLE
+#nop ==============================
+
+#alias {rton} {
+    #var auto_retarget {1};
+    #showme {<102>[ Auto retarget ON ]}
+}
+
+#alias {rtoff} {
+    #var auto_retarget {0};
+    #showme {<102>[ Auto retarget OFF ]}
+}
+
+#nop ==============================
+#nop  AUTO CYCLE ON DEATH
+#nop ==============================
+
+#act {%*your target is dead%*} {
+    #showme {<101>[ Target dead - cycling ]};
+    tsd
+} {5} {sq_dead}
+
+#act {%*no longer targeting%*} {
+    #if {$auto_retarget == 1} {
+        #delay 1 {rtf};
+        #showme {<101>[ Target lost - relocking ]}
+    } {
+        tsd
+    }
+} {5} {sq_lost}
+
+#nop ==============================
+#nop  AUTO RELOCK ON BREAK
+#nop ==============================
+
+#act {%*lock broken%*} {
+    #if {$auto_retarget == 1} {
+        #delay 1 {rtf};
+        #showme {<101>[ Lock broken - relocking ]}
+    }
+} {5} {lock_broken}
+
+#act {%*breaks your lock%*} {
+    #if {$auto_retarget == 1} {
+        #delay 1 {rtf};
+        #showme {<101>[ Lock broken - relocking ]}
+    }
+} {5} {lock_break2}
+
+#act {%*evades your lock%*} {
+    #if {$auto_retarget == 1} {
+        #delay 1 {rtf};
+        #showme {<101>[ Lock evaded - relocking ]}
+    }
+} {5} {lock_evade}
+
+#act {%*rolls away%*} {
+    #if {$auto_retarget == 1} {
+        #delay 1 {rtf};
+        #showme {<101>[ Roll detected - relocking ]}
+    }
+} {5} {lock_roll}
+
+#nop ==============================
+#nop  STATUS
+#nop ==============================
+
+#alias {tgtstat} {
+    #showme {=== TARGET STATUS ===};
+    #showme {Squad      : $sq_name};
+    #showme {Fighter    : $sq_num};
+    #showme {Max found  : $sq_max};
+    #showme {Ceiling    : $SQ_CEIL};
+    #showme {Floor      : $SQ_FLOOR};
+    #showme {Delay      : $SQ_PROBE_DELAY};
+    #showme {Last target: $last_target};
+    #showme {Probing    : $tgt_probing};
+    #showme {Auto relock: $auto_retarget};
+    #showme {====================}
 }
